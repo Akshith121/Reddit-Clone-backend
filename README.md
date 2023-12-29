@@ -1,1 +1,1 @@
-# Reddit-Clone-client
+# Reddit-Clone-server
