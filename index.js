@@ -8,6 +8,8 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import User from "./Models/UserModel.js";
+import Post from "./Models/PostModel.js";
+import Comment from "./Models/commentModel.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -35,6 +37,11 @@ app.get("/user", async (req, res) => {
     }
 })
 
+app.get("/posts", async (req, res) => {
+    const posts = await Post.find();
+    res.send(posts);
+})
+
 app.post("/register", async (req, res) => {
     const { username, password, confirmPassword } = req.body;
     try {
@@ -58,7 +65,6 @@ app.post("/register", async (req, res) => {
                                     res.status(500);
                                 }
                                 else {
-                                    console.log(token);
                                     res.status(201).cookie('token', token).json(newUser);
                                 }
                             })

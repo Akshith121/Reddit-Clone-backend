@@ -1,16 +1,15 @@
 import mongoose from "mongoose";
 
-const postSchema = mongoose.Schema({
+const commentSchema = mongoose.Schema({
     author: {type: String, required: true},
     title: {
         type: String,
         required: true
     },
-    image: String,
-    category: String,
+    body: String,
     postedAt: {type: Date, default: Date.now()}
 })
 
-const Post = mongoose.model('posts', postSchema);
+const Comment = mongoose.model('comments', commentSchema);
 
-export default Post;
+export default Comment;
