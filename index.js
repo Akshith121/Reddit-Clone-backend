@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import User from "./Models/UserModel.js";
 import Post from "./Models/PostModel.js";
 import Comment from "./Models/commentModel.js";
+import Community from "./Models/communitesModel.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -38,7 +39,8 @@ app.get("/user", async (req, res) => {
 })
 
 app.get("/posts", async (req, res) => {
-    const posts = await Post.find();
+    const category = req.query.category;
+    const posts = await Post.find({category: category.toLocaleLowerCase()});
     res.send(posts);
 })
 
@@ -103,6 +105,15 @@ app.post("/login", async (req, res) => {
     catch (err) {
         res.status(500).json({ mssg: "There was some error in the server, try after sometime." });
     }
+})
+
+app.get("/communities", async (req, res) => {
+    const communities = await Community.find();
+    res.json(communities);
+})
+
+app.get("/logout", (req, res) => {
+    
 })
 
 app.use((err, req, res, next) => {
