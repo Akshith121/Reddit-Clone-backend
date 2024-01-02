@@ -40,17 +40,21 @@ app.get("/user", async (req, res) => {
 
 app.get("/posts", async (req, res) => {
     const category = req.query.category;
-    const posts = await Post.find({category: category.toLocaleLowerCase()});
+    const posts = await Post.find({$or: [{author: category.toLocaleLowerCase()}, {category: category.toLocaleLowerCase()}]});
     res.send(posts);
 })
 
 app.post("/register", async (req, res) => {
     const { username, password, confirmPassword } = req.body;
+    
     try {
         const userExists = await User.findOne({ username: username });
         if (userExists === null) {
             if (password !== confirmPassword) {
-                res.status(400).json({ mssg: "Both the passwords should match, try again!" });
+                res.status(401).json({ mssg: "Both the passwords should match, try again!" });
+            }
+            else if(password === ""){
+                res.status(406).json({ mssg: "password cannot be empty, try again!" });
             }
             else {
                 bcrypt.hash(password, 10, async (err, hash) => {
@@ -75,7 +79,7 @@ app.post("/register", async (req, res) => {
             }
         }
         else{
-            res.status(400).json({err: "User already exists with the email provided"});
+            res.status(400).json({mssg: "User already exists with the email provided"});
         }
     } catch (err) {
         res.status(500).json({ mssg: "There was an error, please try again" });
